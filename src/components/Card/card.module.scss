@@ -1,0 +1,33 @@
+.card {
+  border: 1px solid #F3F3F3;
+  border-radius: 40px;
+  padding: 20px;
+  width: 210px;
+  margin-bottom: 30px;
+  transition: 0.2s, transform 0.2s ease-in-out;
+  &:hover{
+    box-shadow: 0 14px 30px rgba(0,0,0,0.05);
+    transform: translateY(-5px);
+  }
+
+  .cardButtonFavorite {
+    position: absolute;
+    cursor: pointer;
+  }
+
+  h5 {
+    font-weight: 400;
+    font-size: 14px;
+    padding-block: 14px;
+  }
+}
+
+.cardInformation{
+  display: flex;
+  justify-content: space-between;
+
+  .grey{
+    text-transform: uppercase;
+    font-size: 13px;
+  }
+}
