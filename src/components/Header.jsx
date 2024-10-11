@@ -11,7 +11,7 @@ function Header({handleOpenClick}) {
                 </div>
             </div>
             <ul className={'header-menu'}>
-                <li onClick={handleOpenClick}>
+                <li onClick={() => handleOpenClick()}>
                     <img src={'/img/icon/trash.svg'} alt={''}/>
                     <span>1205 руб</span></li>
                 <li>

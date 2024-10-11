@@ -3,6 +3,7 @@ import Card from "./components/Card/Card";
 import Header from "./components/Header";
 import DrawerAside from "./components/DrawerAside";
 import {useEffect, useState} from "react";
+import axios from "axios";
 
 
 
@@ -12,30 +13,32 @@ function App() {
   const [searchValue, setSearchValue] = useState("");
   const [sneakers, setSneakers] = useState([])
   useEffect(() => {
-    fetch("https://67037090bd7c8c1ccd416a91.mockapi.io/sneakersItem")
-        .then((res) => {
-          return res.json();
-        })
-        .then((json) => {
-          setSneakers(json);
-        })
+      axios.get("https://67037090bd7c8c1ccd416a91.mockapi.io/sneakersItem")
+          .then(res => setSneakers(res.data))
   }, []);
 
+    useEffect(() => {
+        axios.get("https://67037090bd7c8c1ccd416a91.mockapi.io/cart").then(res => setCartItems(res.data))
+    }, [cartOpened]);
 
-  const deleteItemToCart = (obj) => {
-      console.log('функция ')
-      setCartItems(prevState => prevState.filter((id) => id !== Number(obj)))
-      console.log(obj);
+
+
+  const deleteItemToCart = (sneakerId) => {
+      axios.delete(`https://67037090bd7c8c1ccd416a91.mockapi.io/cart/${sneakerId}`)
+      setCartItems(prevState => prevState.filter(item => item.sneakerId !== sneakerId));
+
   }
 
   const onAddToCart = (obj) => {
 
+
       if (!cartItems.includes(obj)){
-          setCartItems(prev => [ ...prev, obj])
+
+          axios.post("https://67037090bd7c8c1ccd416a91.mockapi.io/cart", {
+              id: obj
+          })
       } else {
-
           deleteItemToCart(obj)
-
       }
 
   }
@@ -66,6 +69,7 @@ function App() {
                       id={item.id}
                       key={index}
                       imageUrl={item.imageUrl}
+
                       handleClickPlus={(obj) => onAddToCart(obj)} handleClickFavorite={() => console.log('Добавили в закдадки')}/>
             ))
           }
