@@ -12,11 +12,17 @@ function App() {
   const [cartItems, setCartItems] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [sneakers, setSneakers] = useState([])
+
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+    console.log(cartItems)
+
+// Expected output: 0, 1 or 2
   useEffect(() => {
       axios.get("https://67037090bd7c8c1ccd416a91.mockapi.io/sneakersItem")
           .then(res => setSneakers(res.data))
   }, []);
-
     useEffect(() => {
         axios.get("https://67037090bd7c8c1ccd416a91.mockapi.io/cart").then(res => setCartItems(res.data))
     }, [cartOpened]);
@@ -31,15 +37,30 @@ function App() {
 
   const onAddToCart = (obj) => {
 
-
-      if (!cartItems.includes(obj)){
-
+      if(cartItems.length === 0){
+          setCartItems((prev) => [...prev, {id: obj, sneakerId: getRandomInt(100)}]);
           axios.post("https://67037090bd7c8c1ccd416a91.mockapi.io/cart", {
-              id: obj
+              id: obj,
+              sneakerId: getRandomInt(100),
           })
-      } else {
-          deleteItemToCart(obj)
+          console.log("Все сработало");
+      } else{
+          let newArr = cartItems.map((item, index) => (item.id))
+          if(!newArr.includes(obj)){
+              setCartItems((prev) => [...prev, {id: obj, sneakerId: getRandomInt(100)}]);
+              axios.post("https://67037090bd7c8c1ccd416a91.mockapi.io/cart", {
+                  id: obj,
+                  sneakerId: getRandomInt(100),
+              })
+              console.log("Все сработало");
+          } else{
+              deleteItemToCart(obj)
+          }
+
+
       }
+
+
 
   }
 
@@ -69,7 +90,7 @@ function App() {
                       id={item.id}
                       key={index}
                       imageUrl={item.imageUrl}
-
+                      cartItems={cartItems}
                       handleClickPlus={(obj) => onAddToCart(obj)} handleClickFavorite={() => console.log('Добавили в закдадки')}/>
             ))
           }

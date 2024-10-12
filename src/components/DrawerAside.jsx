@@ -1,6 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import axios from "axios";
 
-function DrawerAside({handleCloseClick, sneakers , cartItems, deleteItemToCart}) {
+function DrawerAside({handleCloseClick, sneakers , cartItems, deleteItemToCart, setCartItems}) {
+    useEffect(() => {
+        axios.get("https://67037090bd7c8c1ccd416a91.mockapi.io/cart").then(res => setCartItems(res.data))
+    }, []);
 
 
     return (
