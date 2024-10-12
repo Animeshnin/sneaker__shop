@@ -1,26 +1,33 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './card.module.scss'
 
 
 function Card(props) {
     const {title, price, imageUrl, handleClickFavorite, handleClickPlus, id, cartItems } = props;
     const [isAdded, setIsAdded] = useState(false);
-    let newArr = cartItems.map((item, index) => (item.id))
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    const handleClickHeart = () => {
+        handleClickFavorite(Number(id));
+        setIsFavorite(prevState => !prevState);
+    }
 
     const handleClickAdded = () => {
         handleClickPlus(Number(id))
-        setIsAdded(!isAdded);
+        setIsAdded(prevState => !prevState);
     }
 
-    if(newArr.includes(id)){
-        console.log("Все есть")
-    }
+    useEffect(() => {
+        // Проверяем, есть ли id в cartItems
+        const newArr = cartItems.map((item) => item.id);
+        setIsAdded(newArr.includes(Number(id))); // обновляем состояние isAdded
+    }, [cartItems]); // зависимость от cartItems и id
 
 
     return (
         <div className={styles.card}>
             <div className={styles.cardButtonFavorite}>
-                <img src="/img/icon/heart-unliked.svg" onClick={() => handleClickFavorite()} alt="Unliked"/>
+                <img src={isFavorite ? "/img/icon/heart-liked.svg" : "/img/icon/heart-unliked.svg"} onClick={() => handleClickHeart()} alt="Unliked"/>
             </div>
             <img width={133} height={11} src={imageUrl} alt=""/>
             <h5>{title}</h5>

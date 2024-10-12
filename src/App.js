@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import DrawerAside from "./components/DrawerAside";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {Route} from "react-router-dom";
 
 
 
@@ -11,12 +12,12 @@ function App() {
   const [cartOpened, setCartOpened] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const [sneakers, setSneakers] = useState([])
+  const [sneakers, setSneakers] = useState([]);
+  const [favoriteItems, setFavoriteItems] = useState([]);
 
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
-    console.log(cartItems)
 
 // Expected output: 0, 1 or 2
   useEffect(() => {
@@ -32,8 +33,31 @@ function App() {
   const deleteItemToCart = (sneakerId) => {
       axios.delete(`https://67037090bd7c8c1ccd416a91.mockapi.io/cart/${sneakerId}`)
       setCartItems(prevState => prevState.filter(item => item.sneakerId !== sneakerId));
+      console.log(sneakerId)
 
   }
+
+    const deleteItemToFavorite = (id) => {
+      console.log(id, favoriteItems)
+
+        setFavoriteItems(prevState => prevState.filter(item => item.id !== id));
+
+    }
+
+  const onAddToFavorite = (obj) => {
+      if(favoriteItems.length === 0){
+          setFavoriteItems((prev) => [...prev, {id: obj, sneakerId: getRandomInt(100)}]);
+
+      } else{
+          let newArr = favoriteItems.map((item, index) => (item.id))
+          if(!newArr.includes(obj)){
+              setFavoriteItems((prev) => [...prev, {id: obj, sneakerId: getRandomInt(100)}]);
+          } else{
+              deleteItemToFavorite(obj)
+          }
+      }
+  }
+
 
   const onAddToCart = (obj) => {
 
@@ -43,7 +67,6 @@ function App() {
               id: obj,
               sneakerId: getRandomInt(100),
           })
-          console.log("Все сработало");
       } else{
           let newArr = cartItems.map((item, index) => (item.id))
           if(!newArr.includes(obj)){
@@ -52,7 +75,7 @@ function App() {
                   id: obj,
                   sneakerId: getRandomInt(100),
               })
-              console.log("Все сработало");
+
           } else{
               deleteItemToCart(obj)
           }
@@ -91,7 +114,7 @@ function App() {
                       key={index}
                       imageUrl={item.imageUrl}
                       cartItems={cartItems}
-                      handleClickPlus={(obj) => onAddToCart(obj)} handleClickFavorite={() => console.log('Добавили в закдадки')}/>
+                      handleClickPlus={(obj) => onAddToCart(obj)} handleClickFavorite={(obj) => onAddToFavorite(obj)}/>
             ))
           }
         </div>
